@@ -28,35 +28,38 @@
       <div class="section">
         <div class="row">
           <div class="col s12 center">
-              <br><br>
-              <h4>Friendly Questionnaire</h4>
-              <p>Please fill out the questionnaire below.</p><p>The draggable sliders range from 1 (Unlikely) to 5 (Likely), default being 3 (Neutral).</p>
-              <p class="center light">
-                <!-- Name -->
-                <div class="row">
-                  <form class="col s12">
-                    <div class="row">
-                        <div class="input-field col s3"></div>
-                        <div class="input-field col s3">
-                          <textarea id="FirstName" class="materialize-textarea"></textarea>
-                          <label for="FirstName">First Name</label>
-                        </div>
-
-                        <div class="input-field col s3">
-                          <textarea id="LastName" class="materialize-textarea"></textarea>
-                          <label for="LastName">Last Name</label>
-                        </div>
-                        <div class="input-field col s3"></div>
-
+            <br><br>
+            <h4>Friendly Questionnaire</h4>
+            <p>Please fill out the questionnaire below.</p>
+            <p>The draggable sliders range from 1 (Unlikely) to 5 (Likely), default being 3 (Neutral).</p>
+            <p class="center light">
+              <!-- Name -->
+              <div class="row">
+                <form class="col s12">
+                  <div class="row">
+                    <div class="input-field col s3"></div>
+                    <div class="input-field col s3">
+                      <textarea id="FirstName" class="materialize-textarea"></textarea>
+                      <label for="FirstName">First Name</label>
                     </div>
-                  </form>
-                </div>
-                        
-                <div class="center" id="qList"> </div>
 
-                <br><br>  
-              <a href="/profile" class="waves-effect waves-light btn-large ProfileBtn"><i class="material-icons left">cloud</i>Profile</a>
-              <a href="/" class="waves-effect waves-light btn-large SurveyBtn Shifting"><i class="material-icons right">cloud</i>Home</a>                
+                    <div class="input-field col s3">
+                      <textarea id="LastName" class="materialize-textarea"></textarea>
+                      <label for="LastName">Last Name</label>
+                    </div>
+                    <div class="input-field col s3"></div>
+
+                  </div>
+                </form>
+              </div>
+
+              <div class="center" id="qList"> </div>
+
+              <br><br>
+              <a href="/profile" class="waves-effect waves-light btn-large ProfileBtn"><i
+                  class="material-icons left">cloud</i>Profile</a>
+              <a href="/" class="waves-effect waves-light btn-large SurveyBtn Shifting"><i
+                  class="material-icons right">cloud</i>Home</a>
             </p>
           </div>
         </div>
@@ -65,15 +68,15 @@
   </main>
 
   <footer>
-    
+
     <div class="footer-copyright">
       <div class="container center">
-          <!-- <a class="footer-link" href="/api/friends">API Friends List</a> -->
-          <a class="footer-link" href="https://www.github.com/esarnb/FriendFinder">Github Repo</a>
-        </div>
+        <!-- <a class="footer-link" href="/api/friends">API Friends List</a> -->
+        <a class="footer-link" href="https://www.github.com/esarnb/FriendFinder">Github Repo</a>
+      </div>
     </div>
   </footer>
-  
+
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script>
@@ -84,23 +87,97 @@
   <script>
     localStorage.getItem("FFuuid") ? null : localStorage.setItem("FFuuid", uuidv4());
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-      /*
-        <div class="container formQuestions center">
-          <form action="#">
-            <p class="range-field">
-              <input class="sliderVals" type="range" id="q1" min="1" max="5" />
-              <label for="q1">(3)</label>
-            </p>
-          </form>
-         </div>
-      */
-      $("#qList")//ToDO:Append the above through JQUERY
+      var questions = [
+        {
+          q: "Question 1: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 2: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 3: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 4: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 5: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 6: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 7: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 8: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 9: Some Words Some Words Some Words Some Words Some Words Some Words"
+        },
+        {
+          q: "Question 10: Some Words Some Words Some Words Some Words Some Words Some Words"
+        }
+      ];
 
-      $('.sliderVals').on('change input', function() {
-        $(this).siblings('label').html(`(${$(this).val()})`);
+      for (var i = 0; i < questions.length; i++) {
+        var prompt = $("<p>");
+        prompt.text(questions[i].q);
+        $("#qList").append(prompt)
+
+        var labelTag = $("<label>");
+        labelTag.attr("for", `Q${i + 1}`);
+        labelTag.text("(0)")
+        var inputTag = $("<input>");
+        inputTag.addClass("sliderVals");
+        inputTag.attr("type", "range");
+        inputTag.attr("id", `Q${i + 1}`);
+        inputTag.attr("min", "0");
+        inputTag.attr("max", "5");
+        inputTag.attr("value", "0");
+        var pTag = $("<p>");
+        pTag.addClass("range-field");
+        var formTag = $("<form>");
+        formTag.attr("action", "#");
+        var divTag = $("<div>");
+        divTag.addClass("container formQuestions center");
+
+        pTag.append(inputTag);
+        pTag.append(labelTag);
+        formTag.append(pTag);
+        divTag.append(formTag);
+
+        $("#qList").append(divTag);
+
+      }
+
+      var submitBtn = $("<button>");
+      submitBtn.addClass("btn waves-effect waves-light");
+      submitBtn.attr("type", "submit");
+      submitBtn.attr("name", "action");
+      submitBtn.attr("id", "submitBtn");
+      submitBtn.text("Submit");
+
+      submitBtn.append(`<i class="material-icons right">send</i>`);
+      $("#qList").append(submitBtn);
+
+      $('.sliderVals').on('change input', function () {
+        $(this).attr("value", $(this).val()) //updates get-value
+        $(this).siblings('label').html(`(${$(this).val()})`); //updates label
       });
+
+      $(document).on('click', '#submitBtn', function () {
+        event.preventDefault();
+        var unanswered = [];
+        $('.sliderVals').filter(function () {
+          if ($(this).val() == "0") unanswered.push($(this).attr("id"))
+        });
+
+        if (unanswered.length > 0) return alert("Please answer Questions: " + unanswered.join(", "))
+        else alert("All Questions answered");
+      })
     })
     //localStorage.getItem("FFuuid")
   </script>
