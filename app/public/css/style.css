@@ -1,0 +1,62 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.ProfileBtn, .SurveyBtn {
+  background-color: rgb(117, 204, 255);
+}
+
+.footer-link  {
+  color: #704C5E;
+}
+
+nav ul a,
+nav .brand-logo {
+  color: #444;
+}
+
+nav, .nav-wrapper, footer {
+  background-color: rgb(247, 199, 199);
+}
+
+body {
+  background-color: rgb(237, 217, 255);
+  color: rgb(172, 77, 250);
+}
+
+.Shifting {
+  margin-left: 35px;
+  margin-right: 10px;
+}
+
+#logo {
+  width: 32%;
+}
+
+#name {
+  font-size: 50px;
+}
+
+.formQuestions {
+  width: 50%;
+}
+
+input:focus {
+  border-bottom: none!important;
+  box-shadow: none!important;
+}
+

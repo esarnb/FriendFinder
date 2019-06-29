@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/esarnb/FriendFinder/issues"
   },
-  "homepage": "https://github.com/esarnb/FriendFinder#readme"
+  "homepage": "https://github.com/esarnb/FriendFinder#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

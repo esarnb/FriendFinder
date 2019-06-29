@@ -1,12 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Survey</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link type="text/css" rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" media="screen,projection" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="../public/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
+
 <body>
+
+  <header>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-wrapper container">
+        <a id="logo-container" href="/" class="brand-logo center"><img id="logo" src="../images/web/logo.png"></a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- About -->
+  <main>
+    <div class="container">
+      <div class="section">
+        <div class="row">
+          <div class="col s12 center">
+              <br><br>
+              <h4>Friendly Questionnaire</h4>
+              <p>Please fill out the questionnaire below.</p><p>The draggable sliders range from 1 (Unlikely) to 5 (Likely), default being 3 (Neutral).</p>
+              <p class="center light">
+                <!-- Name -->
+                <div class="row">
+                  <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s3"></div>
+                        <div class="input-field col s3">
+                          <textarea id="FirstName" class="materialize-textarea"></textarea>
+                          <label for="FirstName">First Name</label>
+                        </div>
+
+                        <div class="input-field col s3">
+                          <textarea id="LastName" class="materialize-textarea"></textarea>
+                          <label for="LastName">Last Name</label>
+                        </div>
+                        <div class="input-field col s3"></div>
+
+                    </div>
+                  </form>
+                </div>
+                        
+                <div class="center" id="qList"> </div>
+
+                <br><br>  
+              <a href="/profile" class="waves-effect waves-light btn-large ProfileBtn"><i class="material-icons left">cloud</i>Profile</a>
+              <a href="/" class="waves-effect waves-light btn-large SurveyBtn Shifting"><i class="material-icons right">cloud</i>Home</a>                
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    
+    <div class="footer-copyright">
+      <div class="container center">
+          <!-- <a class="footer-link" href="/api/friends">API Friends List</a> -->
+          <a class="footer-link" href="https://www.github.com/esarnb/FriendFinder">Github Repo</a>
+        </div>
+    </div>
+  </footer>
   
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.js"></script>
+
+  <script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
+  <script>
+    localStorage.getItem("FFuuid") ? null : localStorage.setItem("FFuuid", uuidv4());
+
+    $(document).ready(function() {
+
+      /*
+        <div class="container formQuestions center">
+          <form action="#">
+            <p class="range-field">
+              <input class="sliderVals" type="range" id="q1" min="1" max="5" />
+              <label for="q1">(3)</label>
+            </p>
+          </form>
+         </div>
+      */
+      $("#qList")//ToDO:Append the above through JQUERY
+
+      $('.sliderVals').on('change input', function() {
+        $(this).siblings('label').html(`(${$(this).val()})`);
+      });
+    })
+    //localStorage.getItem("FFuuid")
+  </script>
 </body>
+
 </html>
