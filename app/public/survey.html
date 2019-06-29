@@ -90,59 +90,33 @@
     $(document).ready(function () {
 
       var questions = [
-        {
-          q: "Question 1: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 2: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 3: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 4: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 5: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 6: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 7: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 8: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 9: Some Words Some Words Some Words Some Words Some Words Some Words"
-        },
-        {
-          q: "Question 10: Some Words Some Words Some Words Some Words Some Words Some Words"
-        }
+        { q: "Question 1: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 2: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 3: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 4: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 5: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 6: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 7: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 8: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 9: Some Words Some Words Some Words Some Words Some Words Some Words" },
+        { q: "Question 10: Some Words Some Words Some Words Some Words Some Words Some Words" }
       ];
 
+
+      /*
+            Questions, Range Slider,and Submit btn created
+      */
       for (var i = 0; i < questions.length; i++) {
         var prompt = $("<p>");
         prompt.text(questions[i].q);
         $("#qList").append(prompt)
 
-        var labelTag = $("<label>");
-        labelTag.attr("for", `Q${i + 1}`);
-        labelTag.text("(0)")
-        var inputTag = $("<input>");
-        inputTag.addClass("sliderVals");
-        inputTag.attr("type", "range");
-        inputTag.attr("id", `Q${i + 1}`);
-        inputTag.attr("min", "0");
-        inputTag.attr("max", "5");
-        inputTag.attr("value", "0");
-        var pTag = $("<p>");
-        pTag.addClass("range-field");
-        var formTag = $("<form>");
-        formTag.attr("action", "#");
-        var divTag = $("<div>");
-        divTag.addClass("container formQuestions center");
+        var labelTag = $("<label>"); labelTag.attr("for", `Q${i + 1}`); labelTag.text("(0)")
+        var inputTag = $("<input>"); inputTag.addClass("sliderVals"); inputTag.attr("type", "range"); 
+        inputTag.attr("id", `Q${i + 1}`); inputTag.attr("min", "0"); inputTag.attr("max", "5"); inputTag.attr("value", "0");
+        var pTag = $("<p>"); pTag.addClass("range-field");
+        var formTag = $("<form>"); formTag.attr("action", "#");
+        var divTag = $("<div>"); divTag.addClass("container formQuestions center");
 
         pTag.append(inputTag);
         pTag.append(labelTag);
@@ -163,6 +137,10 @@
       submitBtn.append(`<i class="material-icons right">send</i>`);
       $("#qList").append(submitBtn);
 
+
+      /*
+            OnClicks
+      */
       $('.sliderVals').on('change input', function () {
         $(this).attr("value", $(this).val()) //updates get-value
         $(this).siblings('label').html(`(${$(this).val()})`); //updates label
@@ -170,13 +148,25 @@
 
       $(document).on('click', '#submitBtn', function () {
         event.preventDefault();
+        var userPhoto = "";
         var unanswered = [];
+        var answered = [];
         $('.sliderVals').filter(function () {
           if ($(this).val() == "0") unanswered.push($(this).attr("id"))
+          else answered.push($(this).val());
         });
 
         if (unanswered.length > 0) return alert("Please answer Questions: " + unanswered.join(", "))
-        else alert("All Questions answered");
+        else if (!$("#FirstName").val() || !$("#LastName").val()) alert("Please fill in your first & last name!");
+        else {
+          $.post("/api/friends", {
+            name: `${$("#FirstName").val().trim()} ${$("#LastName").val().trim()}`,
+            photo: userPhoto ? userPhoto : userPhoto = "No Photo",
+            survey: answered,
+            FFuuid: localStorage.getItem("FFuuid")
+          })
+        }
+
       })
     })
     //localStorage.getItem("FFuuid")
