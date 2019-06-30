@@ -54,6 +54,14 @@ h3 {
   font-size: x-large;
 }
 
+p {
+  font-family: 'Merienda', cursive;
+}
+
+h3, h4, h5 {
+  font-family: 'Pacifico', cursive;
+}
+
 .formQuestions {
   width: 50%;
 }

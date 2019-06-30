@@ -9,6 +9,7 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css" media="screen,projection" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="../public/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+  <link href="https://fonts.googleapis.com/css?family=Merienda|Pacifico&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -30,8 +31,8 @@
           <div class="col s12 center">
             <br><br>
             <h4>Friendly Questionnaire</h4>
-            <p>Please fill out the questionnaire below.</p>
-            <p>The draggable sliders range from 1 (Unlikely) to 5 (Likely).</p>
+            <p class="instructions">Please fill out the questionnaire below from your own perspective.</p>
+            <p class="instructions">The draggable sliders range from 1 (Unlikely) to 5 (Likely).</p>
             <p class="center light">
               <!-- Name -->
               <div class="row">
@@ -60,7 +61,7 @@
 
               <br><br>
               <a href="/" class="waves-effect waves-light btn-large SurveyBtn Shifting"><i
-                  class="material-icons right">cloud</i>Home</a>
+                  class="material-icons right">home</i>Home</a>
               
             </p>
           </div>
@@ -78,6 +79,18 @@
       </div>
     </div>
   </footer>
+  
+   <!-- Modal Structure -->
+   <div id="errorModal" class="modal">
+     <div class="modal-content">
+       <h4>Oops! There are fields that you must answer!</h4>
+       <p id="fixThese">ok</p>
+     </div>
+     <div class="modal-footer">
+       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+     </div>
+   </div>
+  
 
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -87,18 +100,22 @@
 
   <script>
     $(document).ready(function () {
-
+      //Initialize all modals
+      $('.modal').modal();
+      
+      
+      $(".instructions").show()
       var questions = [
-        { q: "Question 1: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 2: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 3: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 4: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 5: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 6: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 7: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 8: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 9: Some Words Some Words Some Words Some Words Some Words Some Words" },
-        { q: "Question 10: Some Words Some Words Some Words Some Words Some Words Some Words" }
+        { q: "Question 1: I do not mind being the center of attention anywhere I go." },
+        { q: "Question 2: Before I begin the day, I like to plan out exactly what and when I will be doing my tasks." },
+        { q: "Question 3: I become overwhelmed when I attend large events." },
+        { q: "Question 4: It is difficult for me to focus in crowded areas." },
+        { q: "Question 5: I am afraid to do most things because I am prone to making mistakes."},
+        { q: "Question 6: I would tell someone the full truth without any filtering." },
+        { q: "Question 7: My mood in the morning determines how my day will be like." },
+        { q: "Question 8: I question what most people say until they prove themselves in depth." },
+        { q: "Question 9: I like to complete my tasks as soon as I receive them." },
+        { q: "Question 10: I can easily control and limit myself from desires." }
       ];
 
       /*
@@ -163,7 +180,8 @@
       //Submit Button Listener
       $(document).on('click', '#submitBtn', function () {
         event.preventDefault();
-        
+        var errorModal = $(".modal");
+        var fixThese = $("#fixThese");
         var unanswered = [];
         var answered = [];
 
@@ -174,9 +192,15 @@
         });
 
         //Prompt user to answer the unanswered questions.
-        if (unanswered.length > 0) return alert("Please answer Questions: " + unanswered.join(", "))
+        if (unanswered.length > 0) {
+          fixThese.text("Please answer Questions: " + unanswered.join(", "))
+          $('#errorModal').modal("open");
+        }
         //If the name fields are blank, prompt user to fill them in
-        else if (!$("#FirstName").val() || !$("#LastName").val()) alert("Please fill in your first & last name!");
+        else if (!$("#FirstName").val() || !$("#LastName").val()) {
+          fixThese.text("Please fill in your first & last name!")
+          $('#errorModal').modal("open");
+        }
         else {
           //Initialize loading bar.
         $("#qList").append(`<div class="progress"><div class="indeterminate"></div></div>`)
@@ -191,6 +215,7 @@
 
             //Clear All Q & A's to make room for potential matches. 
             $("#qList").empty(); 
+            $(".instructions").hide()
 
             //Potential Matches Title
             $("#qList").append(`<h3> Your Potential Matches: </h3>`)
