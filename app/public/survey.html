@@ -31,23 +31,26 @@
             <br><br>
             <h4>Friendly Questionnaire</h4>
             <p>Please fill out the questionnaire below.</p>
-            <p>The draggable sliders range from 1 (Unlikely) to 5 (Likely), default being 3 (Neutral).</p>
+            <p>The draggable sliders range from 1 (Unlikely) to 5 (Likely).</p>
             <p class="center light">
               <!-- Name -->
               <div class="row">
                 <form class="col s12">
                   <div class="row">
-                    <div class="input-field col s3"></div>
-                    <div class="input-field col s3">
+                    <div class="input-field col s4">
                       <textarea id="FirstName" class="materialize-textarea"></textarea>
                       <label for="FirstName">First Name</label>
                     </div>
 
-                    <div class="input-field col s3">
+                    <div class="input-field col s4">
                       <textarea id="LastName" class="materialize-textarea"></textarea>
                       <label for="LastName">Last Name</label>
                     </div>
-                    <div class="input-field col s3"></div>
+
+                    <div class="input-field col s4">
+                      <textarea id="Photos" class="materialize-textarea"></textarea>
+                      <label for="Photos">Photo URL</label>
+                    </div>
 
                   </div>
                 </form>
@@ -56,10 +59,9 @@
               <div class="center" id="qList"> </div>
 
               <br><br>
-              <a href="/profile" class="waves-effect waves-light btn-large ProfileBtn"><i
-                  class="material-icons left">cloud</i>Profile</a>
               <a href="/" class="waves-effect waves-light btn-large SurveyBtn Shifting"><i
                   class="material-icons right">cloud</i>Home</a>
+              
             </p>
           </div>
         </div>
@@ -83,10 +85,7 @@
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.js"></script>
 
-  <script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
   <script>
-    localStorage.getItem("FFuuid") ? null : localStorage.setItem("FFuuid", uuidv4());
-
     $(document).ready(function () {
 
       var questions = [
@@ -105,23 +104,39 @@
       /*
             Questions, Range Slider,and Submit btn created
       */
+      //Iterate through each question to send it to the client
       for (var i = 0; i < questions.length; i++) {
-        var prompt = $("<p>");
-        prompt.text(questions[i].q);
+        //1. Append a question to the page
+        var prompt = $("<p>"); prompt.text(questions[i].q);
         $("#qList").append(prompt)
 
-        var labelTag = $("<label>"); labelTag.attr("for", `Q${i + 1}`); labelTag.text("(0)")
-        var inputTag = $("<input>"); inputTag.addClass("sliderVals"); inputTag.attr("type", "range"); 
-        inputTag.attr("id", `Q${i + 1}`); inputTag.attr("min", "0"); inputTag.attr("max", "5"); inputTag.attr("value", "0");
-        var pTag = $("<p>"); pTag.addClass("range-field");
-        var formTag = $("<form>"); formTag.attr("action", "#");
-        var divTag = $("<div>"); divTag.addClass("container formQuestions center");
+        //Setup for the Range Slider under each Question
+        var labelTag = $("<label>");
+        labelTag.attr("for", `Q${i + 1}`);
+        labelTag.text("(0)")
 
+        var inputTag = $("<input>");
+        inputTag.addClass("sliderVals");
+        inputTag.attr("type", "range");
+        inputTag.attr("id", `Q${i + 1}`);
+        inputTag.attr("min", "0");
+        inputTag.attr("max", "5");
+        inputTag.attr("value", "0");
+
+        var pTag = $("<p>");
+        pTag.addClass("range-field");
+
+        var formTag = $("<form>");
+        formTag.attr("action", "#");
+
+        var divTag = $("<div>");
+        divTag.addClass("container formQuestions center");
+
+        //2. Append slider under the question prompt
         pTag.append(inputTag);
         pTag.append(labelTag);
         formTag.append(pTag);
         divTag.append(formTag);
-
         $("#qList").append(divTag);
 
       }
@@ -132,39 +147,75 @@
       submitBtn.attr("name", "action");
       submitBtn.attr("id", "submitBtn");
       submitBtn.text("Submit");
-
       submitBtn.append(`<i class="material-icons right">send</i>`);
       $("#qList").append(submitBtn);
 
       /*
-            OnClicks
+            Listeners
       */
+
+      //When the slider changes, update the text below it
       $('.sliderVals').on('change input', function () {
         $(this).attr("value", $(this).val()) //updates get-value
         $(this).siblings('label').html(`(${$(this).val()})`); //updates label
       });
-
+      
+      //Submit Button Listener
       $(document).on('click', '#submitBtn', function () {
         event.preventDefault();
-        var userPhoto = "";
+        
         var unanswered = [];
         var answered = [];
+
+        //Log all unanswered questions, else log all answered values
         $('.sliderVals').filter(function () {
           if ($(this).val() == "0") unanswered.push($(this).attr("id"))
           else answered.push($(this).val());
         });
 
+        //Prompt user to answer the unanswered questions.
         if (unanswered.length > 0) return alert("Please answer Questions: " + unanswered.join(", "))
+        //If the name fields are blank, prompt user to fill them in
         else if (!$("#FirstName").val() || !$("#LastName").val()) alert("Please fill in your first & last name!");
         else {
+          //Initialize loading bar.
+        $("#qList").append(`<div class="progress"><div class="indeterminate"></div></div>`)
+
+          var userPhoto = $("#Photos").val().trim();
+          //Send data from form to server, with a default "No Photo" picture if needed
           $.post("/api/friends", {
             name: `${$("#FirstName").val().trim()} ${$("#LastName").val().trim()}`,
-            photo: userPhoto ? userPhoto : userPhoto = "No Photo",
-            survey: answered,
-            FFuuid: localStorage.getItem("FFuuid")
+            photo: userPhoto ? userPhoto : userPhoto = "https://pbs.twimg.com/profile_images/961238719268257792/QAE3SnEi_400x400.jpg",
+            survey: answered
+          }, function(matches) {
+
+            //Clear All Q & A's to make room for potential matches. 
+            $("#qList").empty(); 
+
+            //Potential Matches Title
+            $("#qList").append(`<h3> Your Potential Matches: </h3>`)
+
+            //Append all matches into Rows and Columns
+            var rowTag = $("<div>");
+              rowTag.addClass("row");
+              var ulTag = $("<ul>");
+              
+              //Each match will print a profile pic and name.
+              for (eachPerson of matches) {
+                var colTag = $("<div>"); colTag.addClass("col s12 m6 l6 xl4");
+                colTag.append(`
+                <li class="collection-item avatar">
+                <span class="title">
+                  <img src="${eachPerson.photo}" alt="" class="circle" width="50" height="50">
+                  <p>${eachPerson.name}</p>
+                </span></li>`)
+
+                ulTag.append(colTag)
+              }
+              rowTag.append(ulTag)
+              $("#qList").append(rowTag)
           })
         }
-
       })
     })
   </script>
