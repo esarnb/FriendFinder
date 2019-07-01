@@ -1,6 +1,6 @@
 # FriendFinder
 
-Want to try out the match maker yourself? [Visit Here!](https://friend-finder-sr.herokuapp.com/survey)
+Want to try out the match maker yourself? [Visit Here!](https://friend-finder-sr.herokuapp.com/)
 
 
 ![Demo of site](app/images/git/demo.gif)
