@@ -50,6 +50,11 @@ After all packages have been installed, the last step is to run the application,
         node server.js
 
 
+#### Port
+* Currently the default port is set to 7500 ( the site would deploy to http://www.your-domain.com:7500 ) unless a "process.env.PORT" is already specified on the machine.
+
+* If you run the site on your pc, the site would be http://localhost:7500
+
 ## Built With
 
 * [Express]( https://www.npmjs.com/package/express )
